@@ -1,0 +1,22 @@
+
+Screen {
+  background: #f2ead3;
+  color: black;
+}
+
+Screen {
+    align: center middle;
+}
+Grid.board {
+    grid-size: 6;
+    height: 90%;
+    width: 90%;
+}
+.tile {
+    border: solid white;
+    padding: 1 2;
+    content-align: center middle;
+}
+.blank {
+    border: none;
+}
