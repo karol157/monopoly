@@ -10,7 +10,7 @@ Screen {
 Grid.board {
     grid-size: 6;
     height: 90%;
-    width: 90%;
+    width: 75%;
 }
 .tile {
     border: solid white;

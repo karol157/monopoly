@@ -1,0 +1,14 @@
+ThingInfo {
+    border: round $accent;
+    padding: 1;
+    width: 30;
+    height: 19;
+}
+
+#buy-button {
+    width: 100%;
+}
+#pass-button {
+    margin-top: 1;
+    width: 100%;
+}

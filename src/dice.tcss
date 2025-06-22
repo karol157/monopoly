@@ -1,0 +1,14 @@
+Dice {
+    border: round $accent;
+    padding: 1;
+    width: 40;
+    height: 15;
+}
+#dice-text {
+    dock: top;
+    height: auto;
+}
+#roll-button {
+    dock: bottom;
+    width: 70%;
+}
