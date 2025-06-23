@@ -16,9 +16,9 @@ class Board(App):
         self.title = "Monopoly game"
         self.board = [
             Field("test1"), Field("test2"), Field("test3"), Field("test4"), Field("test5"), Field("test6"),
-            Field("test7"), "", "", "", "", Field("test12"),
-            Field("test13"), "", "", "", "", Field("test18"),
-            Field("test19"), Field("test20"), Field("test21"), Field("test22"), Field("test23"), Field("test24"),
+            Field("test16"), "", "", "", "", Field("test7"),
+            Field("test15"), "", "", "", "", Field("test8"),
+            Field("test14"), Field("test13"), Field("test12"), Field("test11"), Field("test10"), Field("test9"),
         ]
         self.player1 = Player("Player 1", 1)
         self.player2 = Player("Player 2", 2)
@@ -36,4 +36,4 @@ class Board(App):
         with Horizontal():
             yield ThingInfo("test1", self.player1, self.player2)
             yield Grid(*widgets, classes="board")
-            yield Dice(self.player1,self.player2)
+            yield Dice(self.player1,self.player2, self)
