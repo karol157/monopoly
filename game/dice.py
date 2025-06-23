@@ -13,9 +13,26 @@ class Dice(Widget):
         self.value = 0
         self.board = board
         self._who_starts()
+        self.fields = [
+            "Start",
+            "Hard drive #1",
+            "Komputronik - computer service #1",
+            "Network card #1",
+            "RAM memory #2",
+            "Graphics card #1",
+            "Chance",
+            "RAM memory #1",
+            "Hadr drive #2",
+            "Processor #1",
+            "Network card #2",
+            "Neostrada",
+            "Komputronik - computer service #2",
+            "Processor #2",
+            "Risk",
+            "Graphics card #2",
+        ]
 
     def compose(self):
-        # Static text section at top, Button at bottom
         yield Static(self._text_content(), id="dice-text")
         yield Button("Roll the dice", id="roll-button")
 
@@ -31,17 +48,15 @@ class Dice(Widget):
             current.position += self.value
 
     def _text_content(self) -> str:
-        fields = [f"test{_+1}" for _ in range(16)]
         return f"      {self.players[self.turn - 1]._name}      \n" \
                f"\n\n" \
-               f"Current field: {fields[self.players[self.turn - 1].position]}\n" \
+               f"Current field: {self.fields[self.players[self.turn - 1].position]}\n" \
                f"\n" \
                f"Dice value: {self.value}\n" \
                f"\n" 
     
     async def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "roll-button":
-            fields = [f"test{_+1}" for _ in range(16)]
             prev_position = self.players[self.turn - 1].position
             self.roll()
             dice_text = self.query_one("#dice-text", Static)
@@ -50,7 +65,7 @@ class Dice(Widget):
             other_player = self.players[1 if self.turn - 1 == 0 else 0]
             other_on_prev = other_player.position == prev_position
 
-            prev_field = self.board.query_one(f"#{fields[prev_position]}", Button)
+            prev_field = self.board.query_one(f"#{self.create_id(self.fields[prev_position])}", Button)
             if not other_on_prev:
                 prev_field.styles.border = ("solid", "white")
             else:
@@ -59,7 +74,7 @@ class Dice(Widget):
                 else:
                     prev_field.styles.border = ("dashed", "blue")
 
-            target_field = self.board.query_one(f"#{fields[self.players[self.turn - 1].position]}", Button)
+            target_field = self.board.query_one(f"#{self.create_id(self.fields[self.players[self.turn - 1].position])}", Button)
             if self.players[0].position == self.players[1].position:
                 target_field.styles.border = ("double", "magenta")
             elif self.turn == 1:
@@ -68,3 +83,7 @@ class Dice(Widget):
                 target_field.styles.border = ("dashed", "green")
 
             self.turn = 2 if self.turn == 1 else 1
+
+    def create_id(self, field) -> str:
+        name = field.replace("#", "").replace(" - ", "-").replace(" ", "-")
+        return name

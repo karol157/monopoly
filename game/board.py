@@ -15,10 +15,10 @@ class Board(App):
         super().__init__()
         self.title = "Monopoly game"
         self.board = [
-            Field("test1"), Field("test2"), Field("test3"), Field("test4"), Field("test5"), Field("test6"),
-            Field("test16"), "", "", "", "", Field("test7"),
-            Field("test15"), "", "", "", "", Field("test8"),
-            Field("test14"), Field("test13"), Field("test12"), Field("test11"), Field("test10"), Field("test9"),
+            Field("Network card #1"), Field("RAM memory #1"), Field("Graphics card #1"), Field("Chance"), Field("RAM memory #2"), Field("Hadr drive #2"),
+            Field("Komputronik - computer service #1"), "", "", "", "", Field("Processor #1"),
+            Field("Hard drive #1"), "", "", "", "", Field("Network card #2"),
+            Field("Start"), Field("Graphics card #2"), Field("Risk"), Field("Processor #2"), Field("Komputronik - computer service #2"), Field("Neostrada"),
         ]
         self.player1 = Player("Player 1", 1)
         self.player2 = Player("Player 2", 2)
