@@ -15,10 +15,10 @@ class Board(App):
         super().__init__()
         self.title = "Monopoly game"
         self.board = [
-            Field("Network card #1"), Field("RAM memory #1"), Field("Graphics card #1"), Field("Chance"), Field("RAM memory #2"), Field("Hadr drive #2"),
-            Field("Komputronik - computer service #1"), "", "", "", "", Field("Processor #1"),
-            Field("Hard drive #1"), "", "", "", "", Field("Network card #2"),
-            Field("Start"), Field("Graphics card #2"), Field("Risk"), Field("Processor #2"), Field("Komputronik - computer service #2"), Field("Neostrada"),
+            Field("Network card #1", 120, 10), Field("RAM memory #1", 140, 12), Field("Graphics card #1", 160, 14), Field("Chance", is_buyable=False), Field("RAM memory #2", 180, 16), Field("Hard drive #2", 200, 18),
+            Field("Komputronik - computer service #1", 100, 8), "", "", "", "", Field("Processor #1", 220, 20),
+            Field("Hard drive #1", 60, 4), "", "", "", "", Field("Network card #2", 240, 22),
+            Field("Start", is_buyable=False), Field("Graphics card #2", 300, 28), Field("Risk", is_buyable=False), Field("Processor #2", 280, 16), Field("Komputronik - computer service #2", 260, 24), Field("Neostrada", is_buyable=False),
         ]
         self.player1 = Player("Player 1", 1)
         self.player2 = Player("Player 2", 2)
@@ -34,6 +34,8 @@ class Board(App):
         yield self.player1
         yield self.player2
         with Horizontal():
-            yield ThingInfo("test1", self.player1, self.player2)
+            yield ThingInfo("Start", self.player1, self.player2, self, id="thing-info")
             yield Grid(*widgets, classes="board")
             yield Dice(self.player1,self.player2, self)
+        
+    

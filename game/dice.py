@@ -18,11 +18,11 @@ class Dice(Widget):
             "Hard drive #1",
             "Komputronik - computer service #1",
             "Network card #1",
-            "RAM memory #2",
+            "RAM memory #1",
             "Graphics card #1",
             "Chance",
-            "RAM memory #1",
-            "Hadr drive #2",
+            "RAM memory #2",
+            "Hard drive #2",
             "Processor #1",
             "Network card #2",
             "Neostrada",
@@ -81,6 +81,8 @@ class Dice(Widget):
                 target_field.styles.border = ("dashed", "blue")
             else:
                 target_field.styles.border = ("dashed", "green")
+
+            self.board.query_one("#thing-info").update_info(self.players[self.turn - 1])
 
             self.turn = 2 if self.turn == 1 else 1
 
