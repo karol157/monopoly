@@ -91,6 +91,9 @@ class ThingInfo(Widget):
         else:
             if field.owner is not None and field.owner != turning_player.player_id:
                 rent = field.rent if hasattr(field, 'rent') else "No rent"
+                for thing in self.turning_player.things:
+                    if thing[:-1] == self.thing_name[:-1]:
+                        rent *= 2
                 turning_player.money -= rent
                 self.players[field.owner - 1].money += rent
                 self.query_one("#info-text", Static).update(f"Paid {rent}$ rent to {self.players[field.owner - 1]._name}")
@@ -98,7 +101,7 @@ class ThingInfo(Widget):
                     player.model.update(player.money, player.things)
             self.query_one("#buy-button", Button).disabled = True
             self.query_one("#pass-button", Button).disabled = True
-        
+
         self.turning_player = turning_player
     def create_id(self, field) -> str:
         name = field.replace("#", "").replace(" - ", "-").replace(" ", "-")
