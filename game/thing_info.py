@@ -1,6 +1,5 @@
 from textual.widget import Widget
 from textual.widgets import Static, Button
-from textual.containers import Horizontal
 
 from game.player.player import Player
 
@@ -63,7 +62,7 @@ class ThingInfo(Widget):
         else:
             return "No owner"
 
-    def update_info(self, turning_player: Player):
+    def update_info(self, turning_player: Player, previous_position: int) -> None:
         fields = [
             "Start",
             "Hard drive #1",
@@ -101,6 +100,12 @@ class ThingInfo(Widget):
                     player.model.update(player.money, player.things)
             self.query_one("#buy-button", Button).disabled = True
             self.query_one("#pass-button", Button).disabled = True
+        
+        if turning_player.position < previous_position:
+            text_info = self.query_one("#info-text", Static)
+            text_info.update(f"Passed the Start field, adding 200$ to {turning_player._name}\n\n\n{str(text_info.renderable)}")
+            turning_player.money += 200
+            turning_player.model.update(turning_player.money, turning_player.things)
 
         self.turning_player = turning_player
     def create_id(self, field) -> str:

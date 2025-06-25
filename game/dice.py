@@ -82,7 +82,7 @@ class Dice(Widget):
             else:
                 target_field.styles.border = ("dashed", "green")
 
-            self.board.query_one("#thing-info").update_info(self.players[self.turn - 1])
+            self.board.query_one("#thing-info").update_info(self.players[self.turn - 1], prev_position)
 
             self.turn = 2 if self.turn == 1 else 1
 
