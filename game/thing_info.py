@@ -2,8 +2,9 @@ from textual.widget import Widget
 from textual.widgets import Static, Button
 
 from game.player.player import Player
+import game.chance_and_risk as car # short for chance_and_risk 
 
-import time
+import random
 
 class ThingInfo(Widget):
     def __init__(self, thing_name: str, player1:Player = Player("Player 1", 1), player2:Player = Player("Player 2", 2), board=None,**kwargs):
@@ -12,6 +13,7 @@ class ThingInfo(Widget):
         self.players = [player1, player2]
         self.board = board
         self.turning_player = None
+        random.shuffle(car.chances)  
 
     def compose(self):
         yield Static(self._text_render(), id="info-text")
@@ -88,6 +90,20 @@ class ThingInfo(Widget):
             self.query_one("#buy-button", Button).disabled = False
             self.query_one("#pass-button", Button).disabled = False
         else:
+            if self.thing_name == "Chance":
+                chance = car.chances.pop()
+                self.query_one("#info-text", Static).update(f"{chance[0]}")
+                chance = chance[1].split("-")
+                for i in range(len(chance)//2):
+                    if chance[0] == "mn":
+                        turning_player.money += int(chance[1])
+                    elif chance[0] == "mv":
+                        if chance[1].isdigit():
+                            turning_player.position += int(chance[1])
+                        elif chance[1] == "any":
+                            pass
+                turning_player.model.update(turning_player.money, turning_player.things)
+
             if field.owner is not None and field.owner != turning_player.player_id:
                 rent = field.rent if hasattr(field, 'rent') else "No rent"
                 for thing in self.turning_player.things:
