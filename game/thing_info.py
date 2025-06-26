@@ -90,17 +90,25 @@ class ThingInfo(Widget):
             self.query_one("#buy-button", Button).disabled = False
             self.query_one("#pass-button", Button).disabled = False
         else:
+            self.query_one("#buy-button", Button).disabled = True
+            self.query_one("#pass-button", Button).disabled = True
+
             if self.thing_name == "Chance":
                 chance = car.chances.pop()
                 self.query_one("#info-text", Static).update(f"{chance[0]}")
                 chance = chance[1].split("-")
                 for i in range(len(chance)//2):
-                    if chance[0] == "mn":
-                        turning_player.money += int(chance[1])
-                    elif chance[0] == "mv":
+                    if chance[0+i] == "mn":
+                        turning_player.money += int(chance[1+i])
+                    elif chance[0+i] == "mv":
                         if chance[1].isdigit():
-                            turning_player.position += int(chance[1])
-                        elif chance[1] == "any":
+                            field_prev = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
+                            field_prev.styles.border = ("solid", "white")
+                            turning_player.position = (turning_player.position + int(chance[1+i])) % len(fields)
+                            field_next = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
+                            field_next.styles.border = ("dashed", "green" if turning_player.player_id == 2 else "blue")
+                            text_info = self.query_one("#info-text", Static)
+                        elif chance[1+i] == "any":
                             pass
                 turning_player.model.update(turning_player.money, turning_player.things)
 
@@ -114,8 +122,6 @@ class ThingInfo(Widget):
                 self.query_one("#info-text", Static).update(f"Paid {rent}$ rent to {self.players[field.owner - 1]._name}")
                 for player in self.players:
                     player.model.update(player.money, player.things)
-            self.query_one("#buy-button", Button).disabled = True
-            self.query_one("#pass-button", Button).disabled = True
         
         if turning_player.position < previous_position:
             text_info = self.query_one("#info-text", Static)
@@ -124,6 +130,7 @@ class ThingInfo(Widget):
             turning_player.model.update(turning_player.money, turning_player.things)
 
         self.turning_player = turning_player
+    
     def create_id(self, field) -> str:
         name = field.replace("#", "").replace(" - ", "-").replace(" ", "-")
         return name
