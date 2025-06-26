@@ -93,23 +93,76 @@ class ThingInfo(Widget):
             self.query_one("#buy-button", Button).disabled = True
             self.query_one("#pass-button", Button).disabled = True
 
-            if self.thing_name == "Chance":
-                chance = car.chances.pop()
-                self.query_one("#info-text", Static).update(f"{chance[0]}")
-                chance = chance[1].split("-")
-                for i in range(len(chance)//2):
-                    if chance[0+i] == "mn":
-                        turning_player.money += int(chance[1+i])
-                    elif chance[0+i] == "mv":
-                        if chance[1].isdigit():
+            '''if self.thing_name in ["Chance", "Risk"]:
+                if self.thing_name == "Chance":
+                    card = car.chances.pop()
+                else:
+                    card = car.risks.pop()
+                self.query_one("#info-text", Static).update(f"{card[0]}")
+                card = card[1].split("-")
+
+                for j in card:
+                    j.replace("_", "-")
+                
+                for i in range(len(card)//2):
+                    if card[0+i] == "mn":
+                        turning_player.money += int(card[1+i])
+                    elif card[0+i] == "mv":
+                        if card[1].isdigit():
                             field_prev = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
                             field_prev.styles.border = ("solid", "white")
-                            turning_player.position = (turning_player.position + int(chance[1+i])) % len(fields)
+                            turning_player.position = (turning_player.position + int(card[1+i])) % len(fields)
                             field_next = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
                             field_next.styles.border = ("dashed", "green" if turning_player.player_id == 2 else "blue")
                             text_info = self.query_one("#info-text", Static)
-                        elif chance[1+i] == "any":
+                        elif card[1+i] == "any":
                             pass
+                turning_player.model.update(turning_player.money, turning_player.things)'''
+            if self.thing_name in ["Chance", "Risk"]:
+                if self.thing_name == "Chance":
+                    card = car.chances.pop()
+                else:
+                    card = car.risks.pop()
+                self.query_one("#info-text", Static).update(f"{card[0]}")
+                actions = card[1].split("-")
+                actions = [a.replace("_", "-") for a in actions]
+                action_pairs = []
+                i = 0
+                while i < len(actions):
+                    if actions[i] in ["mn", "mv", "lt"]:
+                        if i+1 < len(actions):
+                            action_pairs.append((actions[i], actions[i+1]))
+                            i += 2
+                        else:
+                            action_pairs.append((actions[i], None))
+                            i += 1
+                    else:
+                        i += 1
+
+                info_lines = [card[0]]
+                for action, value in action_pairs:
+                    if action == "mn":
+                        try:
+                            turning_player.money += int(value)
+                            info_lines.append(f"Money change: {value}$")
+                        except Exception:
+                            pass
+                    elif action == "mv":
+                        if value and value.isdigit():
+                            prev_field = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
+                            prev_field.styles.border = ("solid", "white")
+                            turning_player.position = (turning_player.position + int(value)) % len(fields)
+                            next_field = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
+                            next_field.styles.border = ("dashed", "green" if turning_player.player_id == 2 else "blue")
+                            info_lines.append(f"Moved by {value} fields")
+                        elif value == "any":
+                            info_lines.append("Move to any field in front (choose manually)")
+                    elif action == "lt":
+                        if not hasattr(turning_player, "skip_turns"):
+                            turning_player.skip_turns = 0
+                        turning_player.skip_turns += int(value)
+                        info_lines.append(f"Lose {value} turn(s)")
+                self.query_one("#info-text", Static).update("\n".join(info_lines))
                 turning_player.model.update(turning_player.money, turning_player.things)
 
             if field.owner is not None and field.owner != turning_player.player_id:
