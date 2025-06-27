@@ -9,7 +9,8 @@ class Player(Static):
         self.things = []
         self.position = 0
         self.money = 1500
-
+        self.lose_turn = 0
+        self.first_after_lost_turn = False
         self.model = Model(name, self, str(self.money), self.things)
     
     def reset(self):

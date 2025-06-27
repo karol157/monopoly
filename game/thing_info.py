@@ -129,7 +129,7 @@ class ThingInfo(Widget):
                 action_pairs = []
                 i = 0
                 while i < len(actions):
-                    if actions[i] in ["mn", "mv", "lt"]:
+                    if actions[i] in ["mn", "mv", "lt", "rl"]:
                         if i+1 < len(actions):
                             action_pairs.append((actions[i], actions[i+1]))
                             i += 2
@@ -158,11 +158,17 @@ class ThingInfo(Widget):
                         elif value == "any":
                             info_lines.append("Move to any field in front (choose manually)")
                     elif action == "lt":
-                        if not hasattr(turning_player, "skip_turns"):
-                            turning_player.skip_turns = 0
-                        turning_player.skip_turns += int(value)
+                        if not hasattr(turning_player, "lose_turn"):
+                            turning_player.lose_turn = 0
+                        turning_player.lose_turn += int(value)
+                        turning_player.first_after_lost_turn = True
                         info_lines.append(f"Lose {value} turn(s)")
-                self.query_one("#info-text", Static).update("\n".join(info_lines))
+                    elif action == "rl":
+                        if value == "ag":
+                            info_lines.append("dice rolled again")
+                            dice = self.board.query_one("#dice")
+                            dice.roll()
+                self.query_one("#info-text", Static).update("\n".join(info_lines) + f"\n{str(self.query_one('#info-text', Static).renderable)}")
                 turning_player.model.update(turning_player.money, turning_player.things)
 
             if field.owner is not None and field.owner != turning_player.player_id:

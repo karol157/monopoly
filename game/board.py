@@ -36,6 +36,6 @@ class Board(App):
         with Horizontal():
             yield ThingInfo("Start", self.player1, self.player2, self, id="thing-info")
             yield Grid(*widgets, classes="board")
-            yield Dice(self.player1,self.player2, self)
+            yield Dice(self.player1,self.player2, self, id="dice")
         
     
