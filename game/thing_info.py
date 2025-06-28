@@ -159,7 +159,10 @@ class ThingInfo(Widget):
                 self.query_one("#info-text", Static).update(f"Paid {rent}$ rent to {self.players[field.owner - 1]._name}")
                 for player in self.players:
                     player.model.update(player.money, player.things)
-        
+
+            if self.thing_name == "Neostrada":
+                self.app.push_screen(NumberInput(self.board, turning_player))        
+
         if turning_player.position < previous_position:
             text_info = self.query_one("#info-text", Static)
             text_info.update(f"Passed the Start field, adding 200$ to {turning_player._name}\n\n\n{str(text_info.renderable)}")
