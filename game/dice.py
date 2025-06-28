@@ -43,6 +43,7 @@ class Dice(Widget):
         prev_position = self.players[self.turn - 1].position
 
         self.value = random.randint(1, 6)
+        self.value = 6
         current = self.players[self.turn - 1]
         if hasattr(current, "lose_turn") and current.lose_turn > 0:
             current.lose_turn -= 1

@@ -1,0 +1,13 @@
+Input {
+    width: 51;
+}
+
+#number-input-vertical {
+    align: center middle;
+    margin-top: 0;
+    padding-top: 10;
+}
+
+#test {
+    height: 5;
+}

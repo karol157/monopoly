@@ -6,11 +6,12 @@ from game.field import Field
 from game.player.player import Player
 from game.dice import Dice
 from game.thing_info import ThingInfo
+from game.number_input import NumberInput
 
 import os
 
 class Board(App):
-    CSS_PATH = [os.path.join(".." ,"src", "game.tcss"), os.path.join(".." ,"src", "dice.tcss"), os.path.join(".." ,"src", "thing_info.tcss")]
+    CSS_PATH = [os.path.join(".." ,"src", "game.tcss"), os.path.join(".." ,"src", "dice.tcss"), os.path.join(".." ,"src", "thing_info.tcss"), os.path.join(".." ,"src", "number_input.tcss")]
     def __init__(self):
         super().__init__()
         self.title = "Monopoly game"
@@ -29,13 +30,12 @@ class Board(App):
                 widgets.append(name)
             else:
                 widgets.append(Static("", classes="blank"))
-
-        yield Static("Monopoly Game", classes="title")
-        yield self.player1
-        yield self.player2
-        with Horizontal():
-            yield ThingInfo("Start", self.player1, self.player2, self, id="thing-info")
-            yield Grid(*widgets, classes="board")
-            yield Dice(self.player1,self.player2, self, id="dice")
-        
+        with Vertical():
+            yield Static("Monopoly Game", classes="title")
+            yield self.player1
+            yield self.player2
+            with Horizontal():
+                yield ThingInfo("Start", self.player1, self.player2, self, id="thing-info")
+                yield Grid(*widgets, classes="board")
+                yield Dice(self.player1,self.player2, self, id="dice")
     

@@ -3,6 +3,7 @@ from textual.widgets import Static, Button
 
 from game.player.player import Player
 import game.chance_and_risk as car # short for chance_and_risk 
+from game.number_input import NumberInput
 
 import random
 
@@ -92,32 +93,6 @@ class ThingInfo(Widget):
         else:
             self.query_one("#buy-button", Button).disabled = True
             self.query_one("#pass-button", Button).disabled = True
-
-            '''if self.thing_name in ["Chance", "Risk"]:
-                if self.thing_name == "Chance":
-                    card = car.chances.pop()
-                else:
-                    card = car.risks.pop()
-                self.query_one("#info-text", Static).update(f"{card[0]}")
-                card = card[1].split("-")
-
-                for j in card:
-                    j.replace("_", "-")
-                
-                for i in range(len(card)//2):
-                    if card[0+i] == "mn":
-                        turning_player.money += int(card[1+i])
-                    elif card[0+i] == "mv":
-                        if card[1].isdigit():
-                            field_prev = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
-                            field_prev.styles.border = ("solid", "white")
-                            turning_player.position = (turning_player.position + int(card[1+i])) % len(fields)
-                            field_next = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
-                            field_next.styles.border = ("dashed", "green" if turning_player.player_id == 2 else "blue")
-                            text_info = self.query_one("#info-text", Static)
-                        elif card[1+i] == "any":
-                            pass
-                turning_player.model.update(turning_player.money, turning_player.things)'''
             if self.thing_name in ["Chance", "Risk"]:
                 if self.thing_name == "Chance":
                     card = car.chances.pop()
@@ -153,10 +128,13 @@ class ThingInfo(Widget):
                             prev_field.styles.border = ("solid", "white")
                             turning_player.position = (turning_player.position + int(value)) % len(fields)
                             next_field = self.board.query_one(f"#{self.create_id(fields[turning_player.position])}")
-                            next_field.styles.border = ("dashed", "green" if turning_player.player_id == 2 else "blue")
+                            if self.players[0].position == self.players[1].position:
+                                next_field.styles.border = ("double", "magenta")
+                            else:
+                                next_field.styles.border = ("dashed", "green" if turning_player.player_id == 2 else "blue")
                             info_lines.append(f"Moved by {value} fields")
                         elif value == "any":
-                            info_lines.append("Move to any field in front (choose manually)")
+                            self.app.push_screen(NumberInput(self.board, turning_player))
                     elif action == "lt":
                         if not hasattr(turning_player, "lose_turn"):
                             turning_player.lose_turn = 0
