@@ -39,6 +39,7 @@ class ThingInfo(Widget):
                 field.styles.color = "green" if self.turning_player.player_id == 2 else "blue"
                 self.query_one("#info-text", Static).update(self._text_render())
                 self.turning_player.model.update(self.turning_player.money, self.turning_player.things)
+                self.board.check_win()
             else:
                 self.query_one("#info-text", Static).update("Not enough money to buy this thing.")
             
@@ -161,7 +162,7 @@ class ThingInfo(Widget):
                     player.model.update(player.money, player.things)
 
             if self.thing_name == "Neostrada":
-                self.app.push_screen(NumberInput(self.board, turning_player))        
+                self.app.push_screen(NumberInput(self.board, turning_player))
 
         if turning_player.position < previous_position:
             text_info = self.query_one("#info-text", Static)
@@ -170,7 +171,9 @@ class ThingInfo(Widget):
             turning_player.model.update(turning_player.money, turning_player.things)
 
         self.turning_player = turning_player
-    
+
+        self.board.check_win()
+
     def create_id(self, field) -> str:
         name = field.replace("#", "").replace(" - ", "-").replace(" ", "-")
         return name

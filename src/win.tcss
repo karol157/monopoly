@@ -1,0 +1,55 @@
+#title {
+    text-align: center;
+    height: 3;
+    content-align: center middle;
+    color: orange;
+}
+
+#row {
+    layout: vertical;
+    width: 1fr;
+}
+
+#main-box {
+    border: round green;
+    width: 50%;
+    height: auto;
+    padding: 1;
+    background: $boost;
+}
+
+#message {
+    text-align: center;
+    height: 3;
+    content-align: center middle;
+    color: black;
+}
+
+#information {
+    text-align: center;
+    height: 4;
+    content-align: center middle;
+    color: black;
+}
+
+#button-box {
+    align: center bottom;
+    padding-top: 1;
+    padding-left: 3;
+    padding-right: 3;
+}
+
+#exit {
+    width: 1fr;
+    dock: bottom;
+}
+
+#replay {
+    width: 1fr;
+    dock: bottom;
+}
+#Container {
+    border: round red;
+    height: auto;
+    min-height: 15;
+}
