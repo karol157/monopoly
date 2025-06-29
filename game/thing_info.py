@@ -99,13 +99,15 @@ class ThingInfo(Widget):
                     card = car.chances.pop()
                 else:
                     card = car.risks.pop()
+                
+                car.chances.insert(0, card) 
                 self.query_one("#info-text", Static).update(f"{card[0]}")
                 actions = card[1].split("-")
                 actions = [a.replace("_", "-") for a in actions]
                 action_pairs = []
                 i = 0
                 while i < len(actions):
-                    if actions[i] in ["mn", "mv", "lt", "rl"]:
+                    if actions[i] in ["mn", "mv", "lt", "rl", "rm"]:
                         if i+1 < len(actions):
                             action_pairs.append((actions[i], actions[i+1]))
                             i += 2
@@ -147,6 +149,22 @@ class ThingInfo(Widget):
                             info_lines.append("dice rolled again")
                             dice = self.board.query_one("#dice")
                             dice.roll()
+                    elif action == "rm":
+                        if value == "any":
+                            if turning_player.things:
+                                removed_thing = random.choice(turning_player.things)
+                                turning_player.things.remove(removed_thing)
+
+                                field = self.board.query_one(f"#{self.create_id(removed_thing)}")
+                                field.is_buyable = True
+                                field.owner = None
+                                field.styles.color = "white"
+                                field.styles.border = ("solid", "white")
+                                self.turning_player.model.update(turning_player.money, turning_player.things)
+
+                                info_lines.append(f"Removed {removed_thing}")
+                            else:
+                                info_lines.append("No things to remove")
                 self.query_one("#info-text", Static).update("\n".join(info_lines) + f"\n{str(self.query_one('#info-text', Static).renderable)}")
                 turning_player.model.update(turning_player.money, turning_player.things)
 

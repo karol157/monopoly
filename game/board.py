@@ -51,7 +51,6 @@ class Board(App):
             self.app.push_screen(WinScreen(self.player1))
         else:
             for player in [self.player1, self.player2]:
-                self.app.push_screen(WinScreen(player))
                 things_cp = things_to_complete_computer
                 for thing in player.things:
                     if thing[:-2] in things_cp:

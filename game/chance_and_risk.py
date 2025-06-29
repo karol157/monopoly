@@ -8,7 +8,7 @@ chances = [
     ["You have successfully optimized code - you gain $80 and move forward 1 field", "mn-80-mv-1"], 
     ["Your startup gained popularity - you gain $200", "mn-200"]
 ]
-risks = [
+'''risks = [
     ["Power surge burnt out some equipment - you pay $150", "mn-_150"],
     ["Internet outage - you lose 1 turn", "lt-1"],
     ["Internal server error - you're going back 1 square", "mv-_1"],
@@ -18,5 +18,9 @@ risks = [
     ["The backup system worked - you avoid the start, you do nothing", "anything"],
     ["The mistake cost you time but you learned something new - you go back 2 spaces but gain $60", "mv-_2-mn-60"],
     ["Programmer resigned but left documentation - lose turn but you gain $50", "lt-1-mn-50"],
-    ["Investor backed out - you lose your turn, but you gain $80", "lt-1-mn-80"]
+    ["Investor backed out - you lose your turn, but you gain $80", "lt-1-mn-80"],
+    ["your computer has been infected - you lose a random part of your computer", "rm-any"]
 ]
+'''
+risks = [
+    ["your computer has been infected - you lose a random part of your computer", "rm-any"],["your computer has been infected - you lose a random part of your computer", "rm-any"],["your computer has been infected - you lose a random part of your computer", "rm-any"],["your computer has been infected - you lose a random part of your computer", "rm-any"]]
