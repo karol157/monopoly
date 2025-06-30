@@ -13,8 +13,6 @@
 5. [How to Play](#how-to-play)  
 6. [Game Rules](#game-rules)  
 7. [Repository Structure](#repository-structure)  
-8. [Contributing](#contributing)  
-9. [License](#license)  
 
 ---
 
