@@ -1,21 +1,21 @@
 #title {
-    text-align: center;
-    height: 3;
-    content-align: center middle;
-    color: orange;
+    text-align: center;          /* Center the text horizontally */
+    height: 3;                   /* Fixed height for the title */
+    content-align: center middle; /* Center content vertically and horizontally */
+    color: orange;               /* Orange text color */
 }
 
 #row {
-    layout: vertical;
-    width: 1fr;
+    layout: vertical;            /* Arrange children vertically */
+    width: 1fr;                  /* Flexible width filling available space */
 }
 
 #main-box {
-    border: round green;
-    width: 50%;
-    height: auto;
-    padding: 1;
-    background: $boost;
+    border: round green;         /* Rounded green border */
+    width: 50%;                  /* Half of parent container width */
+    height: auto;                /* Height adjusts to content */
+    padding: 1;                  /* Inner spacing */
+    background: $boost;          /* Background color using variable */
 }
 
 #message {
@@ -27,29 +27,25 @@
 
 #information {
     text-align: center;
-    height: 4;
+    height: 4;                  /* Slightly taller for more text */
     content-align: center middle;
     color: black;
 }
 
 #button-box {
-    align: center bottom;
+    align: center bottom;       /* Align buttons center horizontally and bottom vertically */
     padding-top: 1;
     padding-left: 3;
     padding-right: 3;
 }
 
 #exit {
-    width: 1fr;
-    dock: bottom;
+    width: 100%;                /* Full width button */
+    dock: bottom;               /* Docked at the bottom */
 }
 
-#replay {
-    width: 1fr;
-    dock: bottom;
-}
 #Container {
-    border: round red;
+    border: round red;          /* Rounded red border */
     height: auto;
-    min-height: 15;
+    min-height: 15;            /* Minimum height to keep container sizable */
 }

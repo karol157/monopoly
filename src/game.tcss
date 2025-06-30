@@ -1,22 +1,24 @@
-
 Screen {
-  background: #f2ead3;
-  color: black;
+  background: #f2ead3; /* Light beige background for the entire screen */
+  color: black;        /* Text color is black for good contrast */
 }
 
 Screen {
-    align: center middle;
+  align: center middle; /* Centers content both horizontally and vertically */
 }
+
 Grid.board {
-    grid-size: 6;
-    height: 90%;
-    width: 75%;
+  grid-size: 6;        /* Defines a 6x6 grid layout */
+  height: 90%;         /* Occupies 90% of the parent's height */
+  width: 75%;          /* Occupies 75% of the parent's width */
 }
+
 .tile {
-    border: solid white;
-    padding: 1 2;
-    content-align: center middle;
+  border: solid white;       /* White solid border around each tile */
+  padding: 1 2;              /* Vertical padding 1, horizontal padding 2 */
+  content-align: center middle; /* Centers content inside tiles */
 }
+
 .blank {
-    border: none;
+  border: none; /* Tiles with no border (used as placeholders) */
 }

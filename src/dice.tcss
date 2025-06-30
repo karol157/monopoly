@@ -1,14 +1,16 @@
 Dice {
-    border: round $accent;
-    padding: 1;
-    width: 40;
-    height: 15;
+    border: round $accent;  /* Rounded border using the accent color */
+    padding: 1;             /* Inner spacing */
+    width: 40;              /* Fixed width */
+    height: 15;             /* Fixed height */
 }
+
 #dice-text {
-    dock: top;
-    height: auto;
+    dock: top;              /* Positioned at the top of the Dice widget */
+    height: auto;           /* Height adjusts based on content */
 }
+
 #roll-button {
-    dock: bottom;
-    width: 70%;
+    dock: bottom;           /* Positioned at the bottom of the Dice widget */
+    width: 70%;             /* Button width covers 70% of the container */
 }

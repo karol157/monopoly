@@ -1,14 +1,15 @@
 ThingInfo {
-    border: round $accent;
-    padding: 1;
-    width: 30;
-    height: 19;
+    border: round $accent; /* Rounded border with the accent color */
+    padding: 1;            /* Inner padding for content spacing */
+    width: 30;             /* Fixed width */
+    height: 19;            /* Fixed height */
 }
 
 #buy-button {
-    width: 100%;
+    width: 100%;           /* Button fills the full width of its container */
 }
+
 #pass-button {
-    margin-top: 1;
-    width: 100%;
+    margin-top: 1;         /* Small margin above to separate from the button above */
+    width: 100%;           /* Button fills the full width */
 }

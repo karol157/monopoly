@@ -1,18 +1,41 @@
 from textual.widgets import Static, Button
-from textual import events
 from textual.widget import Widget
 from game.player.player import Player
 import random
 
-class Dice(Widget):
 
-    def __init__(self, player1: Player = Player("Player 1", 1), player2: Player = Player("Player 2", 2), board=None, **kwargs):
+class Dice(Widget):
+    """
+    A widget representing a dice used to control player turns.
+
+    Attributes:
+        players (list[Player]): List of two player objects.
+        turn (int): Indicates whose turn it is (1 or 2).
+        value (int): The value from the last dice roll.
+        board (Board): Reference to the game board instance.
+        fields (list[str]): Ordered list of field names corresponding to board positions.
+    """
+
+    def __init__(
+        self,
+        player1: Player = Player("Player 1", 1),
+        player2: Player = Player("Player 2", 2),
+        board=None,
+        **kwargs,
+    ):
+        """
+        Initialize the Dice widget.
+
+        Args:
+            player1 (Player): First player object.
+            player2 (Player): Second player object.
+            board (App): Reference to the game board app.
+        """
         super().__init__(**kwargs)
         self.players = [player1, player2]
         self.turn = None
         self.value = 0
         self.board = board
-        self._who_starts()
         self.fields = [
             "Start",
             "Hard drive #1",
@@ -31,69 +54,124 @@ class Dice(Widget):
             "Risk",
             "Graphics card #2",
         ]
+        self._set_starting_player()
 
     def compose(self):
-        yield Static(self._text_content(), id="dice-text")
+        """Compose the dice interface layout."""
+        yield Static(self._get_dice_text(), id="dice-text")
         yield Button("Roll the dice", id="roll-button")
 
-    def _who_starts(self):
+    def _set_starting_player(self) -> None:
+        """Randomly choose which player starts the game."""
         self.turn = random.choice([1, 2])
 
-    def roll(self):
-        prev_position = self.players[self.turn - 1].position
+    def roll(self) -> None:
+        """Perform a dice roll and update player position, board state, and UI."""
+        current_player = self.players[self.turn - 1]
+        other_player = self.players[1 if self.turn == 1 else 0]
+        prev_position = current_player.position
+
+        # Skip turn if flagged
+        if getattr(current_player, "lose_turn", 0) > 0:
+            current_player.lose_turn -= 1
+            self._switch_turn()
+            return
 
         self.value = random.randint(1, 6)
-    
-        current = self.players[self.turn - 1]
-        if hasattr(current, "lose_turn") and current.lose_turn > 0:
-            current.lose_turn -= 1
-            self.turn = 2 if self.turn == 1 else 1
-            return
-        if self.value + current.position >= 16:
-            current.position = (current.position + self.value) % 16
-        else:
-            current.position += self.value
-        
+        current_player.position = (current_player.position + self.value) % len(
+            self.fields
+        )
+
+        self._update_dice_text()
+        self._update_field_styles(prev_position, current_player, other_player)
+        self._update_thing_info(current_player, prev_position)
+
+        self._switch_turn()
+
+    def _update_dice_text(self) -> None:
+        """Update the text shown in the dice panel."""
         dice_text = self.query_one("#dice-text", Static)
-        dice_text.update(self._text_content())
+        dice_text.update(self._get_dice_text())
 
-        other_player = self.players[1 if self.turn - 1 == 0 else 0]
-        other_on_prev = other_player.position == prev_position
+    def _update_field_styles(
+        self, prev_position: int, current: Player, other: Player
+    ) -> None:
+        """
+        Update field styles to visually reflect player positions.
 
-        prev_field = self.board.query_one(f"#{self.create_id(self.fields[prev_position])}", Button)
-        if not other_on_prev:
+        Args:
+            prev_position (int): The position the player moved from.
+            current (Player): The current player after rolling.
+            other (Player): The opponent player.
+        """
+        prev_id = self._field_id(self.fields[prev_position])
+        current_id = self._field_id(self.fields[current.position])
+
+        prev_field = self.board.query_one(f"#{prev_id}", Button)
+        curr_field = self.board.query_one(f"#{current_id}", Button)
+
+        # Update previous field style
+        if other.position == prev_position:
+            prev_field.styles.border = ("dashed", "green" if self.turn == 2 else "blue")
+        else:
             prev_field.styles.border = ("solid", "white")
-        else:
-            if self.turn == 1:
-                prev_field.styles.border = ("dashed", "green")
-            else:
-                prev_field.styles.border = ("dashed", "blue")
 
-        target_field = self.board.query_one(f"#{self.create_id(self.fields[self.players[self.turn - 1].position])}", Button)
+        # Update new field style
         if self.players[0].position == self.players[1].position:
-            target_field.styles.border = ("double", "magenta")
-        elif self.turn == 1:
-            target_field.styles.border = ("dashed", "blue")
+            curr_field.styles.border = ("double", "magenta")
         else:
-            target_field.styles.border = ("dashed", "green")
+            curr_field.styles.border = ("dashed", "blue" if self.turn == 1 else "green")
 
-        self.board.query_one("#thing-info").update_info(self.players[self.turn - 1], prev_position)
+    def _update_thing_info(self, player: Player, prev_position: int) -> None:
+        """
+        Update the ThingInfo widget with the current player's info.
 
+        Args:
+            player (Player): The player whose info should be shown.
+            prev_position (int): The previous position before the move.
+        """
+        thing_info = self.board.query_one("#thing-info")
+        thing_info.update_info(player, prev_position)
+
+    def _switch_turn(self) -> None:
+        """Switch to the other player's turn."""
         self.turn = 2 if self.turn == 1 else 1
 
-    def _text_content(self) -> str:
-        return f"      {self.players[self.turn - 1]._name}      \n" \
-               f"\n\n" \
-               f"Current field: {self.fields[self.players[self.turn - 1].position]}\n" \
-               f"\n" \
-               f"Dice value: {self.value}\n" \
-               f"\n" 
-    
+    def _get_dice_text(self) -> str:
+        """
+        Get formatted dice text content.
+
+        Returns:
+            str: Text content showing current player, field, and dice value.
+        """
+        player = self.players[self.turn - 1]
+        return (
+            f"      {player._name}      \n"
+            f"\n\n"
+            f"Current field: {self.fields[player.position]}\n"
+            f"\n"
+            f"Dice value: {self.value}\n"
+            f"\n"
+        )
+
     async def on_button_pressed(self, event: Button.Pressed) -> None:
+        """
+        Handle dice roll when button is pressed.
+
+        Args:
+            event (Button.Pressed): Event object from button press.
+        """
         if event.button.id == "roll-button":
             self.roll()
-            
 
-    def create_id(self, field) -> str:
-        name = field.replace("#", "").replace(" - ", "-").replace(" ", "-")
-        return name
+    def _field_id(self, field_name: str) -> str:
+        """
+        Generate a valid widget ID from a field name.
+
+        Args:
+            field_name (str): Field name as shown on the board.
+
+        Returns:
+            str: Normalized ID string.
+        """
+        return field_name.replace("#", "").replace(" - ", "-").replace(" ", "-")

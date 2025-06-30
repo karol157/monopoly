@@ -1,13 +1,13 @@
 Input {
-    width: 51;
+    width: 51; /* Sets the fixed width of Input fields */
 }
 
 #number-input-vertical {
-    align: center middle;
-    margin-top: 0;
-    padding-top: 10;
+    align: center middle;  /* Centers the container content both horizontally and vertically */
+    margin-top: 0;         /* Removes top margin */
+    padding-top: 10;       /* Adds padding at the top for spacing */
 }
 
 #test {
-    height: 5;
+    height: 5;             /* Sets a fixed height for the element with id 'test' */
 }
